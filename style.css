@@ -1,145 +1,52 @@
 /* style.css */
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* == MAIN CONTENT AREA == */
-.main-description p {
-    color: #555; /* Abu-abu gelap untuk mode terang */
-    font-size: 1.05em;
-    text-align: center;
-}
+.main-description p { color: #555; font-size: 1.05em; text-align: center; }
+[data-theme="dark"] .main-description p { color: #B0BEC5; }
 
-.main .block-container h1 {
-    color: #38761D !important; /* Warna hijau utama untuk judul */
-    text-align: center;
-    font-weight: bold;
-}
-.main .block-container h3 {
-    color: #66BB6A !important; /* Hijau lebih muda untuk subjudul */
-    text-align: center;
-    font-weight: normal;
-}
+.main .block-container h1, .main .block-container h3 { text-align: center; }
 
+.image-container-centered {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
 .stImage img {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border: 1px solid #AED581;
 }
 
+/* Mengatur box hasil deteksi dan info edukasi */
 .stAlert[data-baseweb="alert"] {
     border-radius: 8px;
-    font-size: 1.05em;
-    border-left-width: 5px !important;
-    padding: 1rem !important; /* Tambah padding agar lebih nyaman dilihat */
-}
-.stAlert[data-baseweb="alert"][data-testid="stSuccess"],
-.stAlert.stSuccess { /* Untuk markdown yang meniru stSuccess */
-    border-left-color: #2E7D32 !important;
-    background-color: #E8F5E9 !important;
-    color: #1B5E20 !important;
-}
-.stAlert[data-baseweb="alert"][data-testid="stWarning"],
-.stAlert.stWarning { /* Untuk markdown yang meniru stWarning */
-    border-left-color: #FF8F00 !important;
-    background-color: #FFF3E0 !important;
-    color: #E65100 !important;
-}
-.stAlert[data-baseweb="alert"][data-testid="stInfo"] {
-    border-left-color: #0277BD !important;
-    background-color: #E1F5FE !important;
-    color: #01579B !important;
+    width: 90%;
+    max-width: 500px;
+    margin: 1em auto !important;
+    text-align: left;
 }
 
-
-/* Dark theme overrides untuk main content jika config.toml tidak dipakai */
-[data-theme="dark"] .main-description p {
-    color: #B0BEC5; /* Abu-abu terang untuk mode gelap */
-}
-
-[data-theme="dark"] .stAlert[data-baseweb="alert"][data-testid="stSuccess"],
-[data-theme="dark"] .stAlert.stSuccess {
-    background-color: #1B5E20 !important;
-    color: #C8E6C9 !important;
-    border-left-color: #81C784 !important;
-}
-[data-theme="dark"] .stAlert[data-baseweb="alert"][data-testid="stWarning"],
-[data-theme="dark"] .stAlert.stWarning {
-    background-color: #E65100 !important;
-    color: #FFCC80 !important;
-    border-left-color: #FFB74D !important;
-}
-[data-theme="dark"] .stAlert[data-baseweb="alert"][data-testid="stInfo"] {
-    background-color: #01579B !important;
-    color: #B3E5FC !important;
-    border-left-color: #4FC3F7 !important;
-}
+.educational-info ul { padding-left: 20px; margin-top: 5px; }
+.educational-info li { margin-bottom: 5px; }
 
 
 /* == SIDEBAR == */
-[data-testid="stSidebar"] > div:first-child {
-    background-color: #2E7D32; /* Latar belakang hijau tua untuk sidebar */
-}
-
-[data-testid="stSidebar"] .sidebar-text,
-[data-testid="stSidebar"] .sidebar-text strong,
-[data-testid="stSidebar"] .sidebar-info-custom p,
-[data-testid="stSidebar"] .log-entry,
-[data-testid="stSidebar"] .stMarkdown p, /* Termasuk paragraf umum di markdown sidebar */
-[data-testid="stSidebar"] .stMarkdown p strong,
-[data-testid="stSidebar"] .stMarkdown li, /* Termasuk list item jika ada */
-[data-testid="stSidebar"] .stCaption,
-[data-testid="stSidebar"] h1,
-[data-testid="stSidebar"] h2,
-[data-testid="stSidebar"] h3,
-[data-testid="stSidebar"] h4,
-[data-testid="stSidebar"] h5,
-[data-testid="stSidebar"] h6 {
-    color: #FFFFFF !important; /* Teks putih untuk semua elemen di sidebar */
-}
-
-[data-testid="stSidebar"] .sidebar-info-custom p {
-    font-size: 0.95em;
-    line-height: 1.6;
-}
+[data-testid="stSidebar"] > div:first-child { background-color: #2E7D32; }
+[data-testid="stSidebar"] * { color: #FFFFFF !important; }
 
 [data-testid="stSidebar"] .log-entry {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 8px;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    font-size: 0.9em;
+    background-color: rgba(255, 255, 255, 0.1); padding: 8px; border-radius: 5px; margin-bottom: 5px; font-size: 0.9em;
 }
-
-[data-testid="stSidebar"] .stButton button { /* Styling tombol di sidebar */
-    background-color: #4CAF50; /* Warna hijau primer */
-    color: white;
-    border-radius: 5px;
-    border: none;
-    padding: 0.5em 1em;
-    width: 100%; /* Tombol mengisi lebar sidebar */
+[data-testid="stSidebar"] .stButton button {
+    background-color: #4CAF50; color: white; border-radius: 5px; border: none; width: 100%;
 }
-[data-testid="stSidebar"] .stButton button:hover {
-    background-color: #388E3C; /* Warna hijau lebih gelap saat hover */
-}
+[data-testid="stSidebar"] .stButton button:hover { background-color: #388E3C; }
 
 
-/* Tombol Upload */
-.stFileUploader label {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: var(--text-color);
-}
-[data-theme="dark"] .stFileUploader label {
-    color: #E0E0E0;
-}
-
-/* Footer Caption */
-.stApp > footer .stCaption {
-    text-align: center;
-    color: #757575; /* Warna abu-abu untuk caption di mode terang */
-}
-[data-theme="dark"] .stApp > footer .stCaption {
-    color: #B0B0B0; /* Warna abu-abu terang untuk caption di mode gelap */
-}
+/* == FOOTER == */
+.stApp > footer .stCaption { text-align: center; color: #757575; }
+[data-theme="dark"] .stApp > footer .stCaption { color: #B0B0B0; }
