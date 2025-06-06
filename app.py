@@ -4,7 +4,6 @@ from tensorflow.keras.models import load_model
 import numpy as np
 from PIL import Image
 import pickle
-# import cv2
 
 # --- Konfigurasi Halaman ---
 st.set_page_config(
@@ -26,13 +25,12 @@ if 'total_points' not in st.session_state:
     st.session_state.total_points = 0
 if 'classification_log' not in st.session_state:
     st.session_state.classification_log = []
-if 'last_uploaded_filename' not in st.session_state:
-    st.session_state.last_uploaded_filename = None
-if 'current_file_processed' not in st.session_state:
-    st.session_state.current_file_processed = False
-if 'uploader_key_counter' not in st.session_state: # Untuk mereset file uploader
-    st.session_state.uploader_key_counter = 0
-
+if 'last_processed_id' not in st.session_state:
+    st.session_state.last_processed_id = None
+if 'image_to_show' not in st.session_state:
+    st.session_state.image_to_show = None
+if 'result_to_show' not in st.session_state:
+    st.session_state.result_to_show = None
 
 # --- Muat Model dan Label Encoder ---
 @st.cache_resource
@@ -45,12 +43,10 @@ def load_components():
 try:
     model, le = load_components()
 except FileNotFoundError:
-    st.error("File model atau label encoder tidak ditemukan. Pastikan 'waste_classifier_fast_cnn_final.h5' dan 'label_encoder.pkl' ada di direktori yang sama dengan app.py.")
-    st.stop()
-except Exception as e:
-    st.error(f"Terjadi kesalahan saat memuat model: {e}")
+    st.error("File model atau label encoder tidak ditemukan. Pastikan ada di direktori yang sama.")
     st.stop()
 
+# --- Fungsi-fungsi Bantuan ---
 def preprocess_image(image_pil):
     img = image_pil.convert("RGB")
     img = img.resize((224, 224))
@@ -59,22 +55,10 @@ def preprocess_image(image_pil):
     img_array = np.expand_dims(img_array, axis=0)
     return img_array
 
-def show_educational_info_and_add_points(class_name_encoded, image_name_for_point_logic):
-    points_earned = 0
-    add_points_for_this_image = True
-
-    # Cek apakah gambar dengan nama ini sudah pernah mendapatkan poin di log
-    for log_entry in st.session_state.classification_log:
-        if log_entry['name'] == image_name_for_point_logic and log_entry['points'] > 0:
-            add_points_for_this_image = False
-            break
-    
-    # Jika ini adalah entri log pertama, pasti tambahkan poin
-    if not st.session_state.classification_log:
-        add_points_for_this_image = True
-
+def show_educational_info(class_name_encoded):
+    # Menampilkan info edukasi seperti screenshot
     if class_name_encoded == "O":
-        st.success(
+        st.warning(
             """
             🌿 **Sampah Organik Terdeteksi!**
             Jenis sampah ini berasal dari sisa makhluk hidup dan mudah terurai alami.
@@ -86,9 +70,8 @@ def show_educational_info_and_add_points(class_name_encoded, image_name_for_poin
             - Pastikan tidak tercampur dengan sampah anorganik.
             """
         )
-        if add_points_for_this_image: points_earned = 10
     elif class_name_encoded == "R":
-        st.warning(
+        st.info(
             """
             🔩 **Sampah Anorganik Terdeteksi!**
             Jenis sampah ini umumnya sulit terurai alami, banyak yang dapat didaur ulang.
@@ -100,160 +83,115 @@ def show_educational_info_and_add_points(class_name_encoded, image_name_for_poin
             - Upayakan untuk mengurangi penggunaan produk sekali pakai.
             """
         )
-        if add_points_for_this_image: points_earned = 10
-    else:
-        st.write("Tidak ada informasi edukasi untuk kategori ini.")
-
-    if points_earned > 0:
-        st.session_state.total_points += points_earned
-        st.balloons()
-    return points_earned
 
 # --- Tata Letak Aplikasi ---
-
 st.markdown("<h1 style='text-align: center; color: #38761D;'>🌿 EcoSort AI: Pilah Sampah Jadi Mudah! ♻️</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center; color: #66BB6A;'>Identifikasi Cerdas Sampah Organik & Anorganik</h3>", unsafe_allow_html=True)
-st.markdown("<p class='main-description' style='text-align: center;'>Unggah gambar sampah Anda, biarkan AI mengklasifikasi, dapatkan poin, dan pelajari cara penanganan yang tepat!</p>", unsafe_allow_html=True)
+st.markdown("<p class='main-description' style='text-align: center;'>Unggah atau ambil foto sampah Anda. AI akan langsung mengklasifikasi, memberi poin, dan edukasi!</p>", unsafe_allow_html=True)
 st.markdown("---")
 
 with st.sidebar:
     st.header("🌟 Poin Anda 🌟")
     st.markdown(f"<p class='sidebar-text'>Total Poin: <strong>{st.session_state.total_points}</strong></p>", unsafe_allow_html=True)
-    st.caption("Dapatkan 10 poin untuk setiap klasifikasi gambar baru!")
-
+    st.caption("Dapatkan 10 poin untuk setiap gambar baru!")
     st.header("📜 Log Klasifikasi (Sesi Ini)")
     if st.session_state.classification_log:
         for i, log_item in enumerate(reversed(st.session_state.classification_log[-5:])):
-            st.markdown(f"<div class='log-entry'>{i+1}. {log_item['name']}: {log_item['class']} ({log_item['conf']:.2f}%) - Poin: {log_item['points']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='log-entry'>{i+1}. {log_item['name']}: {log_item['class']} ({log_item['conf']:.2f}%)</div>", unsafe_allow_html=True)
     else:
         st.markdown("<p class='sidebar-text'>Belum ada klasifikasi.</p>", unsafe_allow_html=True)
-    
-    if st.button("🔄 Reset Poin & Log Sesi Ini"):
-        st.session_state.total_points = 0
-        st.session_state.classification_log = []
-        st.session_state.last_uploaded_filename = None
-        st.session_state.current_file_processed = False
-        st.session_state.uploader_key_counter += 1 # Ubah kunci uploader untuk meresetnya
+    if st.button("🔄 Reset Sesi"):
+        keys_to_delete = [k for k in st.session_state.keys() if k not in ['model', 'le']]
+        for key in keys_to_delete:
+            del st.session_state[key]
         st.rerun()
-
     st.markdown("---")
     st.subheader("Tentang Platform Ini")
-    st.markdown(
-        """
-        <div class="sidebar-info-custom">
-        <p>Platform cerdas ini dirancang untuk memudahkan masyarakat dalam mengidentifikasi sampah organik dan anorganik melalui teknologi machine learning. Dapatkan juga panduan edukatif untuk penanganan sampah yang lebih bijak.</p>
-        </div>
-        """, unsafe_allow_html=True
-    )
+    st.markdown("""<div class="sidebar-info-custom"><p>Platform cerdas ini dirancang untuk memudahkan masyarakat dalam mengidentifikasi sampah organik dan anorganik melalui teknologi machine learning. Dapatkan juga panduan edukatif untuk penanganan sampah yang lebih bijak.</p></div>""", unsafe_allow_html=True)
     st.markdown("---")
     st.markdown("<p class='sidebar-text' style='text-align: center;'>Lingkungan Bersih, Hidup Lebih Sehat!</p>", unsafe_allow_html=True)
 
+# --- Kolom Utama & Input ---
 col1, col2 = st.columns([2, 3])
-
+image_buffer = None
 with col1:
     st.subheader("🖼️ Input Gambar Sampah")
-    input_method = st.radio("Pilih metode input:", ("Upload Gambar", "Gunakan Kamera"), horizontal=True, key="input_method_radio")
-
-    image_to_process_for_model = None # Gambar PIL asli untuk model
-    image_for_display = None # Gambar PIL yang mungkin di-resize untuk tampilan
-    
-    uploader_key = f"file_uploader_{st.session_state.uploader_key_counter}"
-
+    input_method = st.radio("Pilih metode input:", ("Upload Gambar", "Gunakan Kamera"), horizontal=True)
     if input_method == "Upload Gambar":
-        uploaded_file = st.file_uploader("Pilih file gambar...", type=["jpg", "jpeg", "png"], key=uploader_key)
-        if uploaded_file is not None:
-            if uploaded_file.name != st.session_state.last_uploaded_filename or not st.session_state.current_file_processed:
-                image_to_process_for_model = Image.open(uploaded_file)
-                image_for_display = image_to_process_for_model.copy() # Buat salinan untuk display
-                st.session_state.last_uploaded_filename = uploaded_file.name
-                st.session_state.current_file_processed = False
-            else: # File sama dan sudah diproses, hanya siapkan untuk display ulang
-                image_for_display = Image.open(uploaded_file) # Buka lagi hanya untuk display
-    else: # Gunakan Kamera
-        img_file_buffer = st.camera_input("Ambil foto sampah")
-        if img_file_buffer is not None:
-            # Beri nama unik untuk webcam capture untuk logika poin
-            webcam_filename = f"webcam_capture_{len(st.session_state.classification_log)}.jpg"
-            if webcam_filename != st.session_state.last_uploaded_filename or not st.session_state.current_file_processed:
-                image_to_process_for_model = Image.open(img_file_buffer)
-                image_for_display = image_to_process_for_model.copy()
-                st.session_state.last_uploaded_filename = webcam_filename
-                st.session_state.current_file_processed = False
-            else:
-                image_for_display = Image.open(img_file_buffer)
+        image_buffer = st.file_uploader("Pilih file gambar...", type=["jpg", "jpeg", "png"])
+    else:
+        image_buffer = st.camera_input("Ambil foto sampah")
 
+# --- Logika Pemrosesan Terpusat ---
+if image_buffer is not None:
+    # Buat ID unik untuk setiap input
+    if hasattr(image_buffer, 'id'): # Input dari kamera memiliki atribut 'id'
+        current_file_id = image_buffer.id
+    else: # Input dari uploader tidak punya 'id', kita buat dari nama dan ukuran
+        current_file_id = f"{image_buffer.name}-{image_buffer.size}"
+    
+    # Proses hanya jika ID file ini baru
+    if current_file_id != st.session_state.last_processed_id:
+        with st.spinner('AI sedang menganalisis... 🤔'):
+            image = Image.open(image_buffer)
+            processed_img = preprocess_image(image)
+            predictions = model.predict(processed_img)
 
+            class_idx = np.argmax(predictions[0])
+            class_name_encoded = le.classes_[class_idx]
+            confidence = predictions[0][class_idx] * 100
+        
+        # Tambah poin dan log
+        st.session_state.total_points += 10
+        st.balloons()
+        
+        file_name = image_buffer.name if hasattr(image_buffer, 'name') else f"capture_{current_file_id}.jpg"
+        display_class_name = "Organik" if class_name_encoded == "O" else "Anorganik"
+        
+        st.session_state.classification_log.append({
+            "name": file_name,
+            "class": display_class_name,
+            "conf": confidence,
+        })
+        
+        # Simpan hasil dan gambar untuk ditampilkan
+        st.session_state.image_to_show = image
+        st.session_state.result_to_show = {
+            "name": file_name,
+            "class_encoded": class_name_encoded,
+            "display_class": display_class_name,
+            "confidence": confidence
+        }
+        
+        # Tandai file ini sudah diproses dan panggil rerun SATU KALI
+        st.session_state.last_processed_id = current_file_id
+        st.rerun()
+
+# --- Tampilan Hasil ---
 with col2:
     st.subheader("🔍 Hasil Klasifikasi & Info")
-    if image_for_display is not None:
-        # --- PENYESUAIAN UKURAN GAMBAR UNTUK TAMPILAN ---
-        display_image_resized = image_for_display.copy()
-        MAX_DISPLAY_HEIGHT = 350  # Tentukan tinggi maksimal gambar tampilan dalam piksel
-        MAX_DISPLAY_WIDTH = 500   # Tentukan lebar maksimal gambar tampilan dalam piksel
-
-        # Pertahankan rasio aspek sambil memastikan tidak melebihi max_height dan max_width
-        img_width, img_height = display_image_resized.size
-        ratio = min(MAX_DISPLAY_WIDTH / img_width, MAX_DISPLAY_HEIGHT / img_height)
-        new_width = int(img_width * ratio)
-        new_height = int(img_height * ratio)
+    
+    if st.session_state.image_to_show:
+        display_image = st.session_state.image_to_show.copy()
+        display_image.thumbnail((450, 350)) # Batasi ukuran gambar
         
-        # Gunakan Image.Resampling.LANCZOS untuk PIL versi baru, Image.LANCZOS untuk yang lama
-        try:
-            display_image_resized = display_image_resized.resize((new_width, new_height), Image.Resampling.LANCZOS)
-        except AttributeError: # Fallback untuk PIL versi lama
-            display_image_resized = display_image_resized.resize((new_width, new_height), Image.LANCZOS)
+        st.markdown("<div class='image-container-centered'>", unsafe_allow_html=True)
+        st.image(display_image, caption=f"Gambar: {st.session_state.result_to_show['name']}")
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    if st.session_state.result_to_show:
+        result = st.session_state.result_to_show
         
-        st.image(display_image_resized, caption=f'Gambar: {st.session_state.last_uploaded_filename}')
-        # --- AKHIR PENYESUAIAN UKURAN GAMBAR ---
-
-        if not st.session_state.current_file_processed and image_to_process_for_model is not None:
-            with st.spinner('AI sedang menganalisis gambar... 🤔'):
-                processed_img = preprocess_image(image_to_process_for_model)
-                predictions = model.predict(processed_img)
-                class_idx = np.argmax(predictions[0])
-                class_name_encoded = le.classes_[class_idx]
-                confidence = predictions[0][class_idx] * 100
-
-            display_class_name = "Organik" if class_name_encoded == "O" else "Anorganik"
-            
-            if display_class_name == "Organik":
-                st.markdown(f"<div class='stAlert stSuccess'>Terdeteksi: <strong>{display_class_name}</strong> (Akurasi: {confidence:.2f}%)</div>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<div class='stAlert stWarning'>Terdeteksi: <strong>{display_class_name}</strong> (Akurasi: {confidence:.2f}%)</div>", unsafe_allow_html=True)
-            
-            points_earned_this_round = show_educational_info_and_add_points(class_name_encoded, st.session_state.last_uploaded_filename)
-
-            st.session_state.classification_log.append({
-                "name": st.session_state.last_uploaded_filename,
-                "class": display_class_name,
-                "conf": confidence,
-                "points": points_earned_this_round
-            })
-            st.session_state.current_file_processed = True
-            st.rerun() # Rerun untuk update tampilan sidebar & mencegah re-proses
-
-        elif st.session_state.current_file_processed and st.session_state.classification_log:
-             # Tampilkan hasil terakhir jika file sama dan sudah diproses
-            last_log = None
-            for log in reversed(st.session_state.classification_log):
-                if log['name'] == st.session_state.last_uploaded_filename:
-                    last_log = log
-                    break
-            
-            if last_log:
-                display_class_name = last_log['class']
-                confidence = last_log['conf']
-                class_name_encoded_for_edu = "O" if display_class_name == "Organik" else "R"
-
-                if display_class_name == "Organik":
-                    st.markdown(f"<div class='stAlert stSuccess'>Terdeteksi: <strong>{display_class_name}</strong> (Akurasi: {confidence:.2f}%)</div>", unsafe_allow_html=True)
-                else:
-                    st.markdown(f"<div class='stAlert stWarning'>Terdeteksi: <strong>{display_class_name}</strong> (Akurasi: {confidence:.2f}%)</div>", unsafe_allow_html=True)
-                show_educational_info_and_add_points(class_name_encoded_for_edu, st.session_state.last_uploaded_filename) # Poin tidak akan bertambah
-            else:
-                st.info("Hasil klasifikasi akan muncul di sini.")
+        # Box 1: Hasil deteksi
+        if result['display_class'] == "Organik":
+            st.success(f"Terdeteksi: {result['display_class']} (Akurasi: {result['confidence']:.2f}%)")
+        else:
+            st.error(f"Terdeteksi: {result['display_class']} (Akurasi: {result['confidence']:.2f}%)")
+        
+        # Box 2: Info Edukasi
+        show_educational_info(result["class_encoded"])
     else:
-        st.info("Silakan upload gambar atau gunakan kamera untuk memulai klasifikasi.")
+        st.info("Hasil klasifikasi akan muncul di sini.")
 
 st.markdown("---")
 st.caption("Dibuat untuk membantu pengelolaan sampah yang lebih baik.")
