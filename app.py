@@ -341,7 +341,7 @@ st.markdown("""
         © 2025 EcoSort AI - Klasifikasi Sampah Organik dan Anorganik - Dibuat oleh tim CC25-CR438		
     </div>
     <div class="footer-right">
-        <a href="https://github.com/syakibb/ecosort-ai" target="_blank" title="Lihat kode di GitHub">❓</a>
+        <a href="https://github.com/syakibb/Capstone" target="_blank" title="Lihat kode di GitHub">❓</a>
     </div>
 </div>
 """, unsafe_allow_html=True)
