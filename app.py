@@ -42,7 +42,7 @@ if 'confidence_warning' not in st.session_state:
 # --- Muat Model dan Label Encoder ---
 @st.cache_resource
 def load_components():
-    model = load_model('model/waste_classifier_fast_cnn_final.h5', compile=False) 
+    model = load_model('model/waste_classifier_fast_cnn_final.h5')
     with open('model/label_encoder.pkl', 'rb') as f:
         le = pickle.load(f)
     return model, le
