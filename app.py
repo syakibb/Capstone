@@ -16,7 +16,7 @@ st.set_page_config(
 # --- CSS Kustom ---
 # Pastikan path file CSS sudah benar
 try:
-    with open("static/style.css") as f:
+    with open("style.css") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 except FileNotFoundError:
     st.warning("File 'style.css' tidak ditemukan. Beberapa elemen mungkin tidak tampil optimal.")
