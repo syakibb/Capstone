@@ -1,4 +1,4 @@
-# EcoSort AI: Klasifikasi Sampah Organik & Anorganik 🌿
+# EcoSort AI: Pilah Sampah Jadi Mudah! 🌿
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
