@@ -1,4 +1,4 @@
-# EcoSort AI: Pilah Sampah Jadi Mudah! 🌿
+# EcoSort AI: Klasifikasi Sampah Organik & Anorganik 🌿
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
@@ -6,8 +6,20 @@
 
 > **Tujuan Utama:** Menjadikan proses pemilahan sampah lebih mudah, edukatif, dan memotivasi bagi semua kalangan.
 
+---
+
+## 🚀 Live Demo
+
+Aplikasi dapat diakses langsung melalui tautan di bawah ini:
+
 <p align="center">
-  <img src="https://storage.googleapis.com/maker-media-tool-bucket/user_upload_assets/images/2b7c62c2-777f-4315-9c59-ac5d204739eb.png" alt="Tampilan Aplikasi EcoSort AI" width="800"/>
+  <a href="https://ecosort-ai.streamlit.app/" target="_blank">
+    <img src="https://static.streamlit.io/badges/streamlit_badge_black_white.svg" alt="Buka Aplikasi Streamlit">
+  </a>
+</p>
+
+<p align="center">
+  <img src="pics/image.png" alt="Tampilan Aplikasi EcoSort AI" width="800"/>
 </p>
 
 ---
