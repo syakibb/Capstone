@@ -14,14 +14,14 @@
 
 ## 🎯 Latar Belakang
 
-Pengelolaan sampah di Indonesia masih menjadi tantangan besar. Salah satu akar masalahnya adalah kesulitan masyarakat di tingkat rumah tangga untuk memilah sampah organik dan anorganik. Solusi teknologi yang ada seringkali tidak praktis, mahal, atau kurang memberikan edukasi. EcoSort AI hadir untuk mengisi kesenjangan ini dengan menyediakan alat yang ringan, mudah diakses, dan interaktif. Template Project Plan - University.docx]
+Pengelolaan sampah di Indonesia masih menjadi tantangan besar. Salah satu akar masalahnya adalah kesulitan masyarakat di tingkat rumah tangga untuk memilah sampah organik dan anorganik. Solusi teknologi yang ada seringkali tidak praktis, mahal, atau kurang memberikan edukasi. EcoSort AI hadir untuk mengisi kesenjangan ini dengan menyediakan alat yang ringan, mudah diakses, dan interaktif.
 
 ---
 
 ## ✨ Fitur Utama
 
 -   **🤖 Klasifikasi AI Instan:** Unggah atau ambil foto sampah dan dapatkan hasil klasifikasi organik/anorganik dalam hitungan detik.
--   **🌟 Sistem Gamifikasi:** Kumpulkan poin untuk setiap klasifikasi yang benar dan naikkan level Anda dari "Pemula Hijau" hingga "Legenda Bumi" untuk membangun kebiasaan positif.
+-   **🌟 Sistem Gamifikasi:** Kumpulkan poin untuk setiap klasifikasi yang benar dan naikkan level Anda untuk membangun kebiasaan positif.
 -   **💡 Edukasi Kontekstual:** Dapatkan tips penanganan praktis langsung setelah klasifikasi dan pelajari dampak sampah melalui konten edukasi yang mudah dipahami.
 -   **📊 Log Aktivitas:** Pantau riwayat klasifikasi Anda untuk melihat progres dan kontribusi Anda.
 
@@ -33,18 +33,30 @@ Pengelolaan sampah di Indonesia masih menjadi tantangan besar. Salah satu akar m
 | ------------------------- | ---------------------------------------------------------------------- |
 | **Frontend** | `Streamlit`, `HTML`, `CSS`                                             |
 | **Backend & ML** | `Python`, `TensorFlow`, `Keras`                                        |
-| **Pemrosesan Data/Gambar** | `NumPy`, `Pillow (PIL)`                                                |
+| **Pemrosesan Data/Gambar**| `NumPy`, `Pillow (PIL)`                                                |
 
 ---
 
-## 🛠️ Menjalankan Proyek Secara Lokal
+## 🧠 Detail Model Machine Learning
 
-Untuk menjalankan aplikasi ini di komputer Anda, ikuti langkah-langkah berikut:
+-   **Arsitektur:** Kami menggunakan **CNN (Convolutional Neural Network) kustom** dengan arsitektur **Depthwise Separable Convolution**. Arsitektur ini dipilih karena sangat ringan dan efisien, sehingga ideal untuk aplikasi web.
+-   **Dataset:** Model ini dilatih menggunakan dataset publik [Waste Classification Data](https://www.kaggle.com/datasets/techsash/waste-classification-data) dari Kaggle.
+-   **Performa:** Model berhasil mencapai **akurasi 91%** pada data pengujian.
 
-**1. Prasyarat:**
-   - Pastikan Anda sudah menginstal Python 3.8+ dan pip.
+---
 
-**2. Klone Repositori:**
-   ```bash
-   git clone [https://github.com/syakibb/Capstone.git](https://github.com/syakibb/Capstone.git)
-   cd Capstone
+## 👥 Tim Kami (CC25-CR438)
+
+Proyek ini adalah hasil kolaborasi dari:
+
+| Nama                   | Student ID     | Universitas                             | Peran Utama                           |
+| ---------------------- | -------------- | --------------------------------------- | ------------------------------------- |
+| **Muhammad Tsaqif** | `MC004D5Y2062` | Institut Teknologi Sepuluh Nopember   | Core Model Engineer                   |
+| **Putu Yoga Suartana** | `MC298D5Y2265` | Universitas Pendidikan Ganesha        | ML & Deployment Developer             |
+| **Syakib Binnur** | `MC288D5Y2465` | Universitas Pamulang                    | UX & Education Specialist             |
+
+---
+
+## 🙏 Ucapan Terima Kasih
+
+Terima kasih kepada **Coding Camp** dan **Dicoding Indonesia** atas kesempatan, bimbingan, dan kurikulum yang luar biasa selama program berlangsung.
