@@ -48,3 +48,10 @@ Untuk menjalankan aplikasi ini di komputer Anda, ikuti langkah-langkah berikut:
    ```bash
    git clone [https://github.com/syakibb/Capstone.git](https://github.com/syakibb/Capstone.git)
    cd Capstone
+# Untuk Windows
+python -m venv venv
+.\venv\Scripts\activate
+
+# Untuk macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
