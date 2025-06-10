@@ -2,7 +2,7 @@
 
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white) ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white) ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
-**EcoSort AI** adalah aplikasi web cerdas yang dirancang untuk membantu masyarakat mengidentifikasi dan memilah sampah organik dan anorganik dengan mudah menggunakan teknologi Machine Learning. Proyek ini dikembangkan sebagai bagian dari program capstone Coding Camp.
+**EcoSort AI** adalah aplikasi web cerdas yang dirancang untuk membantu masyarakat mengidentifikasi dan memilah sampah organik dan anorganik dengan mudah menggunakan teknologi Machine Learning. Proyek ini dikembangkan sebagai bagian dari program pelatihan Coding Camp 2025 by DBS Foundation.
 
 > **Tujuan Utama:** Menjadikan proses pemilahan sampah lebih mudah, edukatif, dan memotivasi bagi semua kalangan.
 
