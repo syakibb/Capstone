@@ -71,4 +71,4 @@ Proyek ini adalah hasil kolaborasi dari:
 
 ## 🙏 Ucapan Terima Kasih
 
-Terima kasih kepada **Coding Camp** dan **Dicoding Indonesia** atas kesempatan, bimbingan, dan kurikulum yang luar biasa selama program berlangsung.
+Terima kasih kepada tim **Coding Camp 2025 by DBS Foundation** dan **Dicoding Indonesia** atas kesempatan, bimbingan, dan kurikulum yang luar biasa selama program berlangsung.
