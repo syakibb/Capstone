@@ -51,7 +51,7 @@ Pengelolaan sampah di Indonesia masih menjadi tantangan besar. Salah satu akar m
 
 ## 🧠 Detail Model Machine Learning
 
--   **Arsitektur:** Kami menggunakan **CNN (Convolutional Neural Network) kustom** dengan arsitektur **Depthwise Separable Convolution**. Arsitektur ini dipilih karena sangat ringan dan efisien, sehingga ideal untuk aplikasi web.
+-   **Arsitektur:** Kami menggunakan **CNN (Convolutional Neural Network) kustom** berbasis **Depthwise Separable Convolution**. Arsitektur ini dipilih karena sangat ringan dan efisien, sehingga ideal untuk aplikasi web.
 -   **Dataset:** Model ini dilatih menggunakan dataset publik [Waste Classification Data](https://www.kaggle.com/datasets/techsash/waste-classification-data) dari Kaggle.
 -   **Performa:** Model berhasil mencapai **akurasi 91%** pada data pengujian.
 
